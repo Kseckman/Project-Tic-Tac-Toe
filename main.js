@@ -1,20 +1,13 @@
 // a place to store the game board
-// how to store information in a 2d matrix
 // factory for making players
 // function that keeps track of player turn
 // function that places a mark for a player
 // function to check game over after each round
-// look into array matrix
 //read up on factory functions/ iife
 
 //create and render board use iife
 const Gameboard = (()=>{
     let gameboard = ['','','','','','','','','']
-
-
-
-    //render loop
-    //add event listenter to each box
     const createBoard= ()=>{
         const board = document.querySelector('.gameboard')
         gameboard.forEach((box, index)=>{
@@ -26,35 +19,28 @@ const Gameboard = (()=>{
             board.append(divEl)
         })
     }
-    
-    //how to update
+
     const update = (index, mark)=>{
         gameboard[index] = mark
     }
 
-    //return the board
     const getGameboard = ()=> gameboard
     return {
         createBoard,
         getGameboard,
         update
     }
-
 })()
 
-//player factory
 const createPlayer = (name, mark)=>{
     return {name, mark}
 }
 
-//game logic
 const Game =(()=>{
-    //player logic
     let players = []
     let currentPlayer;
     let gameOver;
-    console.log(currentPlayer)
-    //game start
+
     const start = ()=>{
         const playerOne = document.querySelector('#player1')
         const playerTwo = document.querySelector('#player2')
@@ -66,8 +52,7 @@ const Game =(()=>{
         document.querySelector('#player2-display').textContent = playerTwo.value
         currentPlayer = 0;
         gameOver= false;
-        console.log(currentPlayer)
-        Gameboard.createBoard()
+        if(!document.querySelector('.square')) return Gameboard.createBoard();
     }
     //click events . here we update, check for win, switch player
     const handleClick = (e)=>{
@@ -93,9 +78,20 @@ const Game =(()=>{
     }
     
     //restart
+    const reset = ()=>{
+        gameOver = false;
+        const squares = document.querySelectorAll('.square')
+        for(let i=0; i < squares.length; i++){
+            Gameboard.update(i, '')
+            squares[i].textContent = ''
+        }
+        const results = document.querySelector('.results-display')
+        results.textContent = ''
+    }
     return {
         start,
-        handleClick
+        handleClick,
+        reset
     }
 })()
 
@@ -122,7 +118,7 @@ const checkForTie = (board)=>{
 //click events for buttons
 const resetBtn = document.querySelector('#restart-button')
 resetBtn.addEventListener('click',()=>{
-    // Game.reset()
+    Game.reset()
 })
 
 const startBtn = document.querySelector('#start-button')
